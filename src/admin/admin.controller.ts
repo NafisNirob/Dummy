@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, Query, Request, Res, UploadedFile, UseInterceptors, UsePipes, ValidationPipe, Session, UseGuards, NotFoundException, HttpStatus } from "@nestjs/common";
 import { AdminService } from "./admin.service";
-import { AdminDTO, AdminUpdateDTO, LoginDTO } from "./admin.dto";
+import { AdminDTO, AdminUpdateDTO, LoginDTO, mailDTO } from "./admin.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { MulterError, diskStorage } from "multer";
 import session = require("express-session");
@@ -161,7 +161,13 @@ export class AdminController {
     }
 
   }
-
+  @Post('/sendmail')
+  @UseGuards(SessionGuard)
+  @UsePipes(new ValidationPipe())
+  sendmail(@Body() data:mailDTO) {
+      console.log(data);
+      return this.adminService.sendmail(data);
+  }
 
 
 

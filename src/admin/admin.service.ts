@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { AdminDTO, AdminUpdateDTO, LoginDTO } from "./admin.dto";
+import { AdminDTO, AdminUpdateDTO, LoginDTO, mailDTO } from "./admin.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { AdminEntity } from "./admin.entity";
 import { Repository } from "typeorm";
 import { sellerEntity } from "../seller/seller.entity";
 import * as bcrypt from 'bcrypt';
+import { MailerService } from "@nestjs-modules/mailer";
 
 @Injectable()
 export class AdminService {
@@ -18,7 +19,8 @@ export class AdminService {
         @InjectRepository(AdminEntity)
         private adminRepo: Repository<AdminEntity>,
         @InjectRepository(sellerEntity)
-        private managerRepo: Repository<sellerEntity>
+        private managerRepo: Repository<sellerEntity>,
+        private mailerService: MailerService,
     ) { }
     async getIndex(): Promise<AdminEntity[]> {
         return this.adminRepo.find();
@@ -100,6 +102,18 @@ getManager(id):Promise<AdminEntity[]>
         },
     });
 } 
+async sendmail(data: mailDTO): Promise<any> {
 
+
+    await this.mailerService.sendMail({
+    to: data.email,
+    subject: 'mgs from admin',
+    text: data.message,
+    });
+    
+    
+    
+    return 'sent your email';
+    }
 
 }

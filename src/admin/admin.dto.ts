@@ -24,3 +24,8 @@ export class AdminUpdateDTO {
     email: string;
     password: string;
 }
+export class mailDTO {
+    @IsEmail({}, { message: "invalid email" })
+   email: string;
+   message: string;
+}
